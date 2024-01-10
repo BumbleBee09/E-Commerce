@@ -11,7 +11,7 @@ const getUSerProfile = async(req,res) => {
 
         const user = await userService.getUserProfileByToken(jwt);
 
-        return re.status(200).send(user);
+        return res.status(200).send(user);
 
     } catch (error) {
         
