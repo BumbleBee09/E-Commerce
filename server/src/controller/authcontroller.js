@@ -8,12 +8,13 @@ const cartService = require("../services/cart_service");
 
 const register = async(req,res) => {
     try {
+
         const user = await userService.createUser(req.body);
         
         const jwt = jwtProvider.generateToken(user._id);
 
         // creating the cart after successful registration becasue after the registration this is the only way to create cart
-        await cartService.createCart(user);
+        await cartService.createCart(user._id);
 
         return res.status(200).send({jwt, message:"Successfully Registration"})
     } catch (error) {
