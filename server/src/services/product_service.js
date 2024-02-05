@@ -77,16 +77,76 @@ const updateProduct = async(productId, reqData) => {
     return await Product.findByIdAndUpdate(productId, reqData);
 }
 
-// const getAllProduct = async(reqQuery) => {
-//     let {category, color, sizes, minPrice, maxPrice, minDiscount, sor, stock, pageNumber, pageSize} = reqQuery;
+const getAllProduct = async(reqQuery) => {
+    let {category, color, sizes, minPrice, maxPrice, minDiscount, sort, stock, pageNumber, pageSize} = reqQuery;
 
-//     pageSize = pageSize || 10;
+    pageSize = pageSize || 10;
 
-//     let query = Product.find().populate("category");
+    let query = Product.find().populate("category");
 
-//     if(category){
-//         const existCategory = await Category.findOne({name: category});
+    //for filtering
+    if(category){
+        const existCategory = await Category.findOne({name: category});
 
-//         if()
-//     }
-// }
+        if(existCategory){
+            query = query.where("category").equals(existCategory._id);
+        }
+
+        else{
+            return {content:[], currentPage:1, totalPages:0}
+        }
+    }
+
+    if (color) {
+        const colorSet = new Set(color.split(",").map(color => color.trim().toLowerCase()));
+    
+        const colorRegex = colorSet.size > 0 ? new RegExp([...colorSet].join("|"), "i") : null;
+
+        if (colorRegex) {
+            query = query.where("color").regex(colorRegex);
+        }
+    }
+    
+    if(sizes){
+        const sizesSet = new Set(sizes);
+
+        query = query.where("sizes.name").in([...sizesSet]);
+    }
+
+    if(minPrice && maxPrice){
+        query = query.where('discountedPrice').gte(minPrice).filter(maxPrice);
+    }
+
+    if(minDiscount){
+        query = (await query.where('discountPercent')).length(minDiscount);
+    }
+
+    if(stock){
+        if(stock == "in_stock"){
+            query = query.where("quantity").gt(0)
+        }
+        else  if(stock == "out_of_stock"){
+            query = query.where("quantity").lt(1)
+        }
+    }
+
+    // for sorting
+    if(sort){
+        const sortDirection = sort==="price_hitolo" ? -1 : 1;
+        
+        query = query.sort({discountedPrice: sortDirection})
+    }
+
+    // for pagination
+    const totalProducts = await Product.countDocuments(query);
+
+    const skip = (pageNumber - 1) * pageSize;
+
+    query = query.skip(skip).limit(pageSize);
+
+    const product = await query.exec();
+
+    const totalPages = Math.ceil(totalProducts/pageSize);
+    
+    return {content: totalProducts, currentPage: pageNumber, totalPages}
+}
