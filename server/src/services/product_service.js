@@ -150,3 +150,19 @@ const getAllProduct = async(reqQuery) => {
     
     return {content: totalProducts, currentPage: pageNumber, totalPages}
 }
+
+const createMultipleProduct = async(products) => {
+
+    for(let product of products){
+        await createProduct(product);
+    }
+}
+
+module.exports = {
+    createProduct,
+    deleteProduct,
+    updateProduct,
+    findProductById,
+    getAllProduct,
+    createMultipleProduct,
+}
