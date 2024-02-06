@@ -6,7 +6,7 @@ const createProduct = async (req, res) => {
 
     return res.status(201).send(product);
   } catch (error) {
-    return res.status(500).send({ error: error.message });
+    return res.status(500).send({ error: error.message, message: "Error in Product_controller" });
   }
 };
 

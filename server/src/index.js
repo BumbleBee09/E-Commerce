@@ -20,7 +20,7 @@ const userProductRoutes = require("./routes/userProductRoutes.js");
 app.use("/api/products", userProductRoutes);
 
 const adminProductRoutes = require("./routes/adminProductRoutes.js");
-app.use("/api/products", adminProductRoutes);
+app.use("/api/admin/products", adminProductRoutes);
 
 const cartRouter = require("./routes/cart_route.js");
 app.use("/api/cart", cartRouter);
