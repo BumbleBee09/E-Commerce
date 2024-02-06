@@ -42,7 +42,7 @@ const findUserCart = async(userId) => {
         
     } catch (error) {
 
-        throw new Error(`error in the findUserCart: ${error.message}`);
+        throw new Error(`error in the findUserCart: ${error.message} ${userId}`);
         
     }
 }

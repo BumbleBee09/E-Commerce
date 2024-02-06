@@ -1,7 +1,7 @@
 const reviewService = require("../services/review_service");
 
 const createReview = async (req, res) => {
-  const user = req.user;
+  const user = await req.user;
   try {
     const review = await reviewService.createReview(req.body, user);
 
