@@ -15,6 +15,8 @@ function App() {
     <>
     <Navigation />
     <Routes>
+          <Route path="/login" element={<HomePage />} />
+          <Route path="/register" element={<HomePage />} />  
           <Route path="/" element={<HomePage />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/:levelOne/:levelTwo/:levelThree" element={<Product />} />
@@ -22,7 +24,6 @@ function App() {
           <Route path="/checkout" element={<CheckOut />} />
           <Route path="/account/order" element={<Order />} />
           <Route path="/account/order/:orderId" element={<OrderDetails />} />
-
       </Routes>
 
     </>
